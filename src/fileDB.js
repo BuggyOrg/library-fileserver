@@ -39,9 +39,7 @@ export function hasComponent (db, meta, version) {
 }
 
 export function component (db, meta, version) {
-  if (!version) {
-    throw new Error('Cannot get component without a specific version.')
-  }
+  if (!version) version = latestVersion(db, meta)
   return compQuery(db, meta, version).value[0]
 }
 
@@ -62,6 +60,7 @@ export function addComponent (db, component) {
 }
 
 export function setMetaInfo (db, component, version, key, value) {
+  if (!version) version = latestVersion(db, component)
   const meta = Component.id(component)
   if (!_.has(db, `meta.${meta}.${key}`)) {
     return _.set(db, `meta.${meta}.${key}`, [{value, version}])
@@ -70,6 +69,7 @@ export function setMetaInfo (db, component, version, key, value) {
 }
 
 export function metaInfos (db, component, version) {
+  if (!version) version = latestVersion(db, component)
   var res = _(db.meta[Component.id(component)])
     .toPairs()
     .map(([key, list]) => {
@@ -83,6 +83,7 @@ export function metaInfos (db, component, version) {
 }
 
 export function metaInfo (db, component, version, key) {
+  if (!version) version = latestVersion(db, component)
   return metaInfos(db, component, version)[key]
 }
 

@@ -39,7 +39,7 @@ export function serve (db, port) {
     if (!DB.hasComponent(db, req.params.meta)) {
       return res.status(404).end()
     }
-    res.json(DB.component(db, req.params.meta, DB.latestVersion(db, req.params.meta)))
+    res.json(DB.component(db, req.params.meta, null))
     res.end()
   })
 
@@ -64,7 +64,7 @@ export function serve (db, port) {
     if (!DB.hasComponent(db, req.params.component)) {
       return res.sendStatus(400)
     }
-    res.json(_.keys(DB.metaInfos(db, req.params.component, DB.latestVersion(db, req.params.component))))
+    res.json(_.keys(DB.metaInfos(db, req.params.component, null)))
     res.end()
   })
 
@@ -72,13 +72,13 @@ export function serve (db, port) {
     if (!DB.hasComponent(db, req.params.component)) {
       return res.sendStatus(400)
     }
-    res.json(DB.metaInfo(db, req.params.component, DB.latestVersion(db, req.params.component), req.params.key))
+    res.json(DB.metaInfo(db, req.params.component, null, req.params.key))
     res.end()
   })
 
   app.post('/meta/:component/:key', (req, res) => {
     if (!req.body || !req.body.value) return res.sendStatus(400)
-    DB.setMetaInfo(db, req.params.component, DB.latestVersion(db, req.params.component), req.params.key, req.body.value)
+    DB.setMetaInfo(db, req.params.component, null, req.params.key, req.body.value)
     res.status(204).end()
   })
 
