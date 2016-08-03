@@ -26,6 +26,11 @@ export function serve (db, port) {
     res.end()
   })
 
+  app.get('/export', (req, res) => {
+    res.json(db)
+    res.end()
+  })
+
   app.get('/components', (req, res) => {
     res.json(DB.components(db).map((c) => Component.id(c)))
     res.end()
