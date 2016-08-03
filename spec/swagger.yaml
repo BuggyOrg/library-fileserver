@@ -191,6 +191,8 @@ paths:
           description: The key was updated for the component.
         400:
           description: No component with this meta key exists.
+        404:
+          description: The component does not have meta information for this key.
   /meta/{component}/version/{version}/{key}:
     get:
       summary: Meta key value for a component
@@ -217,6 +219,8 @@ paths:
           description: The value of the meta key that is valid at the given version. Type can be anything.
         400:
           description: No component with this meta key exists.
+        404:
+          description: The component does not have meta information for this key.
     post:
       summary: Set a meta key
       description: |
@@ -255,7 +259,7 @@ paths:
       responses:
         200:
           description: The value of the key.
-        400:
+        404:
           description: No such key is defined.
     post:
       summary: Set a configuration value
@@ -269,3 +273,10 @@ paths:
       responses:
         204:
           description: The key was successfully updated.
+  /export:
+    get:
+      summary: Returns the whole database
+      description: Get the JSON document describing the whole database.
+      responses:
+        200:
+          description: The whole DB is returned.
