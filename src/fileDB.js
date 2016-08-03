@@ -22,6 +22,10 @@ export function load (filename) {
   return JSON.parse(fs.readFileSync(filename, 'utf8'))
 }
 
+export function importJSON (json) {
+  return _.cloneDeep(json)
+}
+
 export function components (db) {
   return db.components
 }

@@ -2,10 +2,12 @@
 
 import chai from 'chai'
 import chaiHttp from 'chai-http'
+import chaiAsPromised from 'chai-as-promised'
 import {serve} from '../src/restAPI'
 // import _ from 'lodash'
 
 chai.use(chaiHttp)
+chai.use(chaiAsPromised)
 var expect = chai.expect
 
 describe('Meta information', () => {
@@ -125,48 +127,33 @@ describe('Meta information', () => {
   })
 
   it('fails to get non-existing meta information', () => {
-    return chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
+    return expect(chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
       .get('/meta/a/z')
       .then((res) => {
-        expect(res.status).to.equal(400)
-      })
-      .catch((err) => {
-        expect(err).to.be.ok
-      })
+      })).to.be.rejected
   })
 
   it('fails to get meta information for a non-existing component', () => {
-    return chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
+    return expect(chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
       .get('/meta/b/x')
       .then((res) => {
-        expect(res.status).to.equal(400)
-      })
-      .catch((err) => {
-        expect(err).to.be.ok
-      })
+      })).to.be.rejected
   })
 
   it('fails to set meta information for a non-existing component', () => {
-    return chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
+    return expect(chai.request(serve({components: [], meta: {}}))
       .post('/meta/b/x')
       .send({value: 'z'})
       .then((res) => {
-        expect(res.status).to.equal(400)
-      })
-      .catch((err) => {
-        expect(err).to.be.ok
-      })
+      })).to.be.rejected
   })
 
   it('errors if the post value is invalid', () => {
-    return chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
+    return expect(chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
       .post('/meta/a/x')
       .send({X: 4})
       .then((res) => {
         expect(res.status).to.equal(400)
-      })
-      .catch((err) => {
-        expect(err).to.be.ok
-      })
+      })).to.be.rejected
   })
 })

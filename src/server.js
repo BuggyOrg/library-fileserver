@@ -1,6 +1,5 @@
 
-import * as DB from './fileDB'
-import * as Rest from './restAPI'
+import {serve} from 'api'
 import tempfile from 'tempfile'
 
 var dbFileName = tempfile('.json')
@@ -10,6 +9,4 @@ if (!process.env.BUGGY_LIBRARY_FILEDB) {
 }
 var port = process.env.BUGGY_LIBRARY_PORT || 8818
 
-var db = DB.load(dbFileName)
-Rest.serve(db, port)
-
+serve(port, dbFileName)

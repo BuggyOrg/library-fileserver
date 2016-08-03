@@ -2,10 +2,12 @@
 
 import chai from 'chai'
 import chaiHttp from 'chai-http'
+import chaiAsPromised from 'chai-as-promised'
 import {serve} from '../src/restAPI'
 // import _ from 'lodash'
 
 chai.use(chaiHttp)
+chai.use(chaiAsPromised)
 var expect = chai.expect
 
 describe('Configuration', () => {
@@ -35,14 +37,27 @@ describe('Configuration', () => {
 
   it('errors if the post value is invalid', () => {
     var app = serve({config: {}})
-    return chai.request(app)
+    return expect(chai.request(app)
       .post('/config/d')
       .send({X: 4})
       .then((res) => {
-        expect(res.status).to.equal(400)
-      })
-      .catch((err) => {
-        expect(err).to.be.ok
-      })
+      })).to.be.rejected
+  })
+
+  it('errors if the config is not defined', () => {
+    var app = serve({config: {}})
+    return expect(chai.request(app)
+      .get('/config/r')
+      .then((res) => {
+      })).to.be.rejected
+  })
+
+  it('can export the complete DB', () => {
+    return chai.request(serve({components: [], meta: {}, config: {a: 1}}))
+    .get('/export')
+    .then((res) => {
+      expect(res.status).to.equal(200)
+      expect(res.body).to.eql({components: [], meta: {}, config: {a: 1}})
+    })
   })
 })

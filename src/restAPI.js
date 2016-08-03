@@ -23,6 +23,7 @@ export function serve (db, port) {
       version: require('../package.json').version,
       type: 'buggy-library-file-database'
     })
+    res.end()
   })
 
   app.get('/components', (req, res) => {
@@ -57,12 +58,11 @@ export function serve (db, port) {
     if (DB.hasComponent(db, req.body.meta, req.body.version)) return res.sendStatus(400)
     DB.addComponent(db, req.body)
     res.status(204).end()
-    res.end()
   })
 
   app.get('/meta/:component', (req, res) => {
     if (!DB.hasComponent(db, req.params.component)) {
-      return res.sendStatus(400)
+      return res.sendStatus(400).end()
     }
     res.json(_.keys(DB.metaInfos(db, req.params.component, null)))
     res.end()
@@ -70,21 +70,28 @@ export function serve (db, port) {
 
   app.get('/meta/:component/:key', (req, res) => {
     if (!DB.hasComponent(db, req.params.component)) {
-      return res.sendStatus(400)
+      return res.sendStatus(400).end()
     }
-    res.json(DB.metaInfo(db, req.params.component, null, req.params.key))
+    const metaInfo = DB.metaInfo(db, req.params.component, null, req.params.key)
+    if (metaInfo == null) {
+      return res.sendStatus(404).end()
+    }
+    res.json(metaInfo)
     res.end()
   })
 
   app.post('/meta/:component/:key', (req, res) => {
     if (!req.body || !req.body.value) return res.sendStatus(400)
+    if (!DB.hasComponent(db, req.params.component)) {
+      return res.sendStatus(400).end()
+    }
     DB.setMetaInfo(db, req.params.component, null, req.params.key, req.body.value)
     res.status(204).end()
   })
 
   app.get('/meta/:component/version/:version', (req, res) => {
     if (!DB.hasComponent(db, req.params.component)) {
-      return res.sendStatus(400)
+      return res.sendStatus(400).end()
     }
     res.json(_.keys(DB.metaInfos(db, req.params.component, req.params.version)))
     res.end()
@@ -92,7 +99,7 @@ export function serve (db, port) {
 
   app.get('/meta/:component/version/:version/:key', (req, res) => {
     if (!DB.hasComponent(db, req.params.component)) {
-      return res.sendStatus(400)
+      return res.sendStatus(400).end()
     }
     res.json(DB.metaInfo(db, req.params.component, req.params.version, req.params.key))
     res.end()
@@ -100,12 +107,19 @@ export function serve (db, port) {
 
   app.post('/meta/:component/version/:version/:key', (req, res) => {
     if (!req.body || !req.body.value) return res.sendStatus(400)
+    if (!DB.hasComponent(db, req.params.component)) {
+      return res.sendStatus(400).end()
+    }
     DB.setMetaInfo(db, req.params.component, req.params.version, req.params.key, req.body.value)
     res.status(204).end()
   })
 
   app.get('/config/:key', (req, res) => {
-    res.json(DB.config(db, req.params.key))
+    const conf = DB.config(db, req.params.key)
+    if (conf == null) {
+      return res.sendStatus(404).end()
+    }
+    res.json(conf)
     res.end()
   })
 
