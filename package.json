@@ -1,7 +1,7 @@
 {
   "name": "@buggyorg/library-fileserver",
   "version": "0.1.0",
-  "description": "Library for buggy queries stored in simple files, e.g. for local use.",
+  "description": "Library for buggy components stored in simple files, e.g. for local use.",
   "main": "lib/api.js",
   "scripts": {
     "test": "standard src/**/*.js && mocha --compilers js:babel-register",
