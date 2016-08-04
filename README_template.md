@@ -4,5 +4,5 @@ A server implementation for a buggy library. This implementation uses a simple f
 
 # REST API
 
-The REST API is defined in the swagger specification [spec/swagger.yaml](spec/swagger.yaml). A short overview over the commands:
+The REST API is defined in the [swagger specification](https://buggyorg.github.io/library-fileserver/). A short overview over the commands:
 
