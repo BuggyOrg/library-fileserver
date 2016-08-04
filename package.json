@@ -7,7 +7,9 @@
     "test": "standard src/**/*.js && mocha --compilers js:babel-register",
     "build": "babel src -d lib && swagger-to-md -y spec/swagger.yaml | cat README_template.md - > README.md",
     "prepublish": "babel src -d lib && swagger-to-md -y spec/swagger.yaml | cat README_template.md - > README.md",
-    "start": "node ./lib/server.js"
+    "start": "node ./lib/server.js",
+    "doc": "yaml2json spec/swagger.yaml > spec/swagger_tmp.json && swagger-to-html spec/swagger_tmp.json swagger; rm spec/swagger_tmp.json",
+    "publish-docs": "yaml2json spec/swagger.yaml > spec/swagger_tmp.json && swagger-to-html spec/swagger_tmp.json swagger; rm spec/swagger_tmp.json && (git diff --exit-code > /dev/null || (echo 'No clean head. Please commit or stash before pushing docs.' && exit 1))  && (git diff --cached --exit-code  > /dev/null  || (echo 'No clean head. Please commit or stash before pushing docs.' && exit 1)) && git add -f swagger/* && git commit -m '(doc) New documentation.' && git subtree split --prefix swagger -b gh-pages && git push -f origin gh-pages:gh-pages && git branch -D gh-pages && git reset HEAD~1"
   },
   "author": "Maximilian Klein",
   "license": "MIT",
@@ -20,7 +22,9 @@
     "chai-http": "^3.0.0",
     "mocha": "^2.4.5",
     "standard": "^6.0.8",
-    "swagger-to-md": "^1.0.0"
+    "swagger-to-html": "^0.4.0",
+    "swagger-to-md": "^1.0.0",
+    "yamljs": "^0.2.8"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
