@@ -16,7 +16,7 @@ var helpers = {
 }
 
 export function load (filename) {
-  if (!fs.exists(filename)) {
+  if (!fs.existsSync(filename)) {
     fs.writeFileSync(filename, JSON.stringify(defaultDB))
   }
   return JSON.parse(fs.readFileSync(filename, 'utf8'))
