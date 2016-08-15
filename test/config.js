@@ -53,11 +53,11 @@ describe('Configuration', () => {
   })
 
   it('can export the complete DB', () => {
-    return chai.request(serve({components: [], meta: {}, config: {a: 1}}))
+    return chai.request(serve({Components: [], meta: {}, config: {a: 1}}))
     .get('/export')
     .then((res) => {
       expect(res.status).to.equal(200)
-      expect(res.body).to.eql({components: [], meta: {}, config: {a: 1}})
+      expect(res.body).to.eql({Components: [], meta: {}, config: {a: 1}})
     })
   })
 })

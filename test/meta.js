@@ -12,7 +12,7 @@ var expect = chai.expect
 
 describe('Meta information', () => {
   it('gets meta information for a component', () => {
-    return chai.request(serve({components: [{meta: 'a', version: '1.0.0'}], meta: {a: {x: [{value: 'y', version: '1.0.0'}]}}}))
+    return chai.request(serve({Components: [{meta: 'a', version: '1.0.0'}], meta: {a: {x: [{value: 'y', version: '1.0.0'}]}}}))
       .get('/meta/a/x')
       .then((res) => {
         expect(res.status).to.equal(200)
@@ -23,7 +23,7 @@ describe('Meta information', () => {
   it('uses latest meta information', () => {
     return chai.request(serve(
       {
-        components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
+        Components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
         meta: {a: {x: [{value: 'y', version: '0.8.0'}, {value: 'z', version: '1.0.0'}]}}
       }))
       .get('/meta/a/x')
@@ -36,7 +36,7 @@ describe('Meta information', () => {
   it('uses meta information from older components', () => {
     return chai.request(serve(
       {
-        components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
+        Components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
         meta: {a: {x: [{value: 'y', version: '0.8.0'}]}}
       }))
       .get('/meta/a/x')
@@ -49,7 +49,7 @@ describe('Meta information', () => {
   it('allows specific queries with version information', () => {
     return chai.request(serve(
       {
-        components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
+        Components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
         meta: {a: {x: [{value: 'y', version: '0.8.0'}, {value: 'z', version: '1.0.0'}]}}
       }))
       .get('/meta/a/version/0.8.0/x')
@@ -62,7 +62,7 @@ describe('Meta information', () => {
   it('can query all meta keys for a component', () => {
     return chai.request(serve(
       {
-        components: [{meta: 'a', version: '0.1.0'}],
+        Components: [{meta: 'a', version: '0.1.0'}],
         meta: {a: {x: [{value: 'y', version: '0.1.0'}], y: [{value: 'z', version: '0.1.0'}]}}
       }))
       .get('/meta/a')
@@ -74,7 +74,7 @@ describe('Meta information', () => {
 
   it('queries all meta keys for a component at a specific version', () => {
     var app = serve({
-      components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
+      Components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
       meta: {a: {x: [{value: 'y', version: '0.8.0'}], y: [{value: 'z', version: '1.0.0'}]}}
     })
     return chai.request(app)
@@ -87,7 +87,7 @@ describe('Meta information', () => {
 
   it('queries all meta keys for a component at a specific version and earlier', () => {
     var app = serve({
-      components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
+      Components: [{meta: 'a', version: '1.0.0'}, {meta: 'a', version: '0.8.0'}],
       meta: {a: {x: [{value: 'y', version: '0.8.0'}], y: [{value: 'z', version: '1.0.0'}]}}
     })
     return chai.request(app)
@@ -99,7 +99,7 @@ describe('Meta information', () => {
   })
 
   it('sets meta information for a component', () => {
-    var app = serve({components: [{meta: 'a', version: '0.1.0'}], meta: {}})
+    var app = serve({Components: [{meta: 'a', version: '0.1.0'}], meta: {}})
     return chai.request(app)
       .post('/meta/a/x')
       .send({value: 'z'})
@@ -113,7 +113,7 @@ describe('Meta information', () => {
   })
 
   it('sets meta information for the latest version of the component', () => {
-    var app = serve({components: [{meta: 'a', version: '0.1.0'}, {meta: 'a', version: '0.2.0'}], meta: {}})
+    var app = serve({Components: [{meta: 'a', version: '0.1.0'}, {meta: 'a', version: '0.2.0'}], meta: {}})
     return chai.request(app)
       .post('/meta/a/x')
       .send({value: 'z'})
@@ -127,21 +127,21 @@ describe('Meta information', () => {
   })
 
   it('fails to get non-existing meta information', () => {
-    return expect(chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
+    return expect(chai.request(serve({Components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
       .get('/meta/a/z')
       .then((res) => {
       })).to.be.rejected
   })
 
   it('fails to get meta information for a non-existing component', () => {
-    return expect(chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
+    return expect(chai.request(serve({Components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
       .get('/meta/b/x')
       .then((res) => {
       })).to.be.rejected
   })
 
   it('fails to set meta information for a non-existing component', () => {
-    return expect(chai.request(serve({components: [], meta: {}}))
+    return expect(chai.request(serve({Components: [], meta: {}}))
       .post('/meta/b/x')
       .send({value: 'z'})
       .then((res) => {
@@ -149,7 +149,7 @@ describe('Meta information', () => {
   })
 
   it('errors if the post value is invalid', () => {
-    return expect(chai.request(serve({components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
+    return expect(chai.request(serve({Components: [{meta: 'a', version: '0.1.0'}], meta: {a: {x: [{value: 'y', version: '0.1.0'}]}}}))
       .post('/meta/a/x')
       .send({X: 4})
       .then((res) => {
