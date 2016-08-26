@@ -56,7 +56,7 @@ export function latestVersion (db, meta) {
 }
 
 export function addComponent (db, component) {
-  if (hasComponent(db, component, component.version)) {
+  if (hasComponent(db, component.meta, component.version)) {
     throw new Error('Component already exists in registry. Please use a new version when updating components.')
   } else {
     db.Components.push(component)
