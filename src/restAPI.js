@@ -41,26 +41,26 @@ export function serve (db, port) {
     res.end()
   })
 
-  app.get('/components/get/:meta', (req, res) => {
-    if (!DB.hasComponent(db, req.params.meta)) {
+  app.get('/components/get/:componentId', (req, res) => {
+    if (!DB.hasComponent(db, req.params.componentId)) {
       return res.status(404).end()
     }
-    res.json(DB.component(db, req.params.meta, null))
+    res.json(DB.component(db, req.params.componentId, null))
     res.end()
   })
 
-  app.get('/components/get/:meta/version/:version', (req, res) => {
-    if (!DB.hasComponent(db, req.params.meta, req.params.version)) {
+  app.get('/components/get/:componentId/version/:version', (req, res) => {
+    if (!DB.hasComponent(db, req.params.componentId, req.params.version)) {
       return res.status(404).end()
     }
-    res.json(DB.component(db, req.params.meta, req.params.version))
+    res.json(DB.component(db, req.params.componentId, req.params.version))
     res.end()
   })
 
   app.post('/components', (req, res) => {
     if (!req.body) return res.sendStatus(400)
     if (!Component.isValid(req.body)) return res.sendStatus(400)
-    if (DB.hasComponent(db, req.body.meta, req.body.version)) return res.sendStatus(400)
+    if (DB.hasComponent(db, req.body.componentId, req.body.version)) return res.sendStatus(400)
     DB.addComponent(db, req.body)
     res.status(204).end()
   })

@@ -30,33 +30,33 @@ export function components (db) {
   return db.Components
 }
 
-const compQuery = (db, meta, version) => {
+const compQuery = (db, componentId, version) => {
   if (!version) {
-    return jq(`[*meta=${Component.id(meta)}]`, {data: db.Components})
+    return jq(`[*componentId=${Component.id(componentId)}]`, {data: db.Components})
   } else {
-    return jq(`[*meta=${Component.id(meta)} & version=${semver.clean(version)}]`, {data: db.Components, helpers})
+    return jq(`[*componentId=${Component.id(componentId)} & version=${semver.clean(version)}]`, {data: db.Components, helpers})
   }
 }
 
-export function hasComponent (db, meta, version) {
-  return compQuery(db, meta, version).value.length !== 0
+export function hasComponent (db, componentId, version) {
+  return compQuery(db, componentId, version).value.length !== 0
 }
 
-export function component (db, meta, version) {
-  if (!version) version = latestVersion(db, meta)
-  return compQuery(db, meta, version).value[0]
+export function component (db, componentId, version) {
+  if (!version) version = latestVersion(db, componentId)
+  return compQuery(db, componentId, version).value[0]
 }
 
-export function componentVersions (db, meta) {
-  return compQuery(db, meta).value.map((cmp) => cmp.version)
+export function componentVersions (db, componentId) {
+  return compQuery(db, componentId).value.map((cmp) => cmp.version)
 }
 
-export function latestVersion (db, meta) {
-  return componentVersions(db, meta).sort(semver.rcompare)[0]
+export function latestVersion (db, componentId) {
+  return componentVersions(db, componentId).sort(semver.rcompare)[0]
 }
 
 export function addComponent (db, component) {
-  if (hasComponent(db, component.meta, component.version)) {
+  if (hasComponent(db, Component.id(component), component.version)) {
     throw new Error('Component already exists in registry. Please use a new version when updating components.')
   } else {
     db.Components.push(component)
@@ -65,11 +65,11 @@ export function addComponent (db, component) {
 
 export function setMetaInfo (db, component, version, key, value) {
   if (!version) version = latestVersion(db, component)
-  const meta = Component.id(component)
-  if (!_.has(db, `meta.${meta}.${key}`)) {
-    return _.set(db, `meta.${meta}.${key}`, [{value, version}])
+  const componentId = Component.id(component)
+  if (!_.has(db, `meta.${componentId}.${key}`)) {
+    return _.set(db, `meta.${componentId}.${key}`, [{value, version}])
   }
-  db.meta[meta][key].push({value: value, version})
+  db.meta[componentId][key].push({value: value, version})
 }
 
 export function metaInfos (db, component, version) {
