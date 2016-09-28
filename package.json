@@ -1,6 +1,6 @@
 {
   "name": "@buggyorg/library-fileserver",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Library for buggy components stored in simple files, e.g. for local use.",
   "main": "lib/api.js",
   "scripts": {
