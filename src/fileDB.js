@@ -6,7 +6,7 @@ import _ from 'lodash'
 import semver from 'semver'
 
 var defaultDB = {
-  Components: [],
+  components: [],
   meta: {},
   config: {}
 }
@@ -27,14 +27,14 @@ export function importJSON (json) {
 }
 
 export function components (db) {
-  return db.Components
+  return db.components
 }
 
 const compQuery = (db, componentId, version) => {
   if (!version) {
-    return jq(`[*componentId=${Component.id(componentId)}]`, {data: db.Components})
+    return jq(`[*componentId=${Component.id(componentId)}]`, {data: db.components})
   } else {
-    return jq(`[*componentId=${Component.id(componentId)} & version=${semver.clean(version)}]`, {data: db.Components, helpers})
+    return jq(`[*componentId=${Component.id(componentId)} & version=${semver.clean(version)}]`, {data: db.components, helpers})
   }
 }
 
@@ -59,7 +59,7 @@ export function addComponent (db, component) {
   if (hasComponent(db, Component.id(component), component.version)) {
     throw new Error('Component already exists in registry. Please use a new version when updating components.')
   } else {
-    db.Components.push(component)
+    db.components.push(component)
   }
 }
 
