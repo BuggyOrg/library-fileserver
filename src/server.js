@@ -1,5 +1,5 @@
 
-import {serve} from 'api'
+import {serve} from './api'
 import tempfile from 'tempfile'
 
 var dbFileName = tempfile('.json')
