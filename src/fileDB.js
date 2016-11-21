@@ -23,7 +23,7 @@ export function load (filename) {
 }
 
 export function importJSON (json) {
-  return _.cloneDeep(json)
+  return _.merge({}, defaultDB, _.cloneDeep(json))
 }
 
 export function components (db) {
