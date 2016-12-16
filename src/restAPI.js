@@ -60,7 +60,7 @@ export function serve (db, port) {
   app.post('/components', (req, res) => {
     if (!req.body) return res.sendStatus(400)
     if (!Component.isValid(req.body)) return res.sendStatus(400)
-    if (DB.hasComponent(db, req.body.componentId, req.body.version)) return res.sendStatus(400)
+    if (DB.hasComponent(db, req.body.componentId, req.body.version)) return res.sendStatus(409)
     DB.addComponent(db, req.body)
     res.status(204).end()
   })
